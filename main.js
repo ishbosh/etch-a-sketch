@@ -16,42 +16,66 @@
     // Limit the original div container size so they fit into the same space.
 
 function createGrid(sizeOfGrid) {
+    //Limit size of grid
+    if (sizeOfGrid > 100) {
+        sizeOfGrid = 100;
+    } else if (sizeOfGrid < 16) {
+        sizeOfGrid = 16;
+    }
+
     // Grab the container
-    const CONTAINER = document.querySelector(".container");
+    const container = document.querySelector(".container");
 
     // Calculate size of each grid element
     const gridElementSize = calculateGridElementSize(sizeOfGrid) + "px";
-    let count = 0;
+
     // Number of Rows
     for (let i = 0; i < sizeOfGrid; i++) {
         // Number of Columns
         for (let j = 0; j < sizeOfGrid; j++) {
+
+            // Create div grid element
             let newDiv = document.createElement("div");
             newDiv.classList.add("grid");
             newDiv.style.width = gridElementSize;
             newDiv.style.height = gridElementSize;
-            newDiv.textContent = ++count;
 
             // Add the new Div to the grid container
-            CONTAINER.appendChild(newDiv);
+            container.appendChild(newDiv);
         }
     }
+
+    drawOnGrid();
 }
 
 function calculateGridElementSize(sizeOfGrid) {
     // Get size of the grid container, assume width and height are the same. Use parseInt to drop the px off
-    const CONTAINER = document.querySelector(".container");
-    const CONTAINER_SIZE = parseInt(getComputedStyle(CONTAINER).width, 10);
+    const container = document.querySelector(".container");
+    const containerSize = parseInt(getComputedStyle(container).width, 10);
     // Get size of the grid border - temporarily add it to the DOM and then remove it. use parseInt to drop the px off 
     const tempDiv = document.createElement("div")
     tempDiv.classList.add("grid");
-    CONTAINER.appendChild(tempDiv);
+    container.appendChild(tempDiv);
     const BORDER_SIZE = parseInt(getComputedStyle(tempDiv).borderWidth, 10);
-    CONTAINER.removeChild(tempDiv);
+    container.removeChild(tempDiv);
 
     // Need to subtract the 2 sides of the border from the total element size so that it fits properly
-    const elementSize = (CONTAINER_SIZE / sizeOfGrid) - (BORDER_SIZE * 2);
+    const elementSize = (containerSize / sizeOfGrid) - (BORDER_SIZE * 2);
     return elementSize;
 }
-parseInt()
+
+
+// Create a draw function
+function drawOnGrid() {
+    // Listen for mouse enter on each grid square, change color to black on mouse enter (and then stop listening to that square?)
+    const grid = document.querySelectorAll(".grid");
+
+    grid.forEach((div) => {
+        div.addEventListener("mouseenter", function(e){
+            e.target.style.backgroundColor = "#000";
+        });
+    });
+}
+
+
 createGrid(16);
