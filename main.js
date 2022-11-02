@@ -15,6 +15,11 @@
     // Use prompt to request new grid size, set limit between 16 - 100
     // Limit the original div container size so they fit into the same space.
 
+const DEFAULT_SIZE = 16;
+
+createGrid(DEFAULT_SIZE);
+changeGridSize();
+
 function createGrid(sizeOfGrid) {
     //Limit size of grid
     if (sizeOfGrid > 100) {
@@ -78,4 +83,25 @@ function drawOnGrid() {
 }
 
 
-createGrid(16);
+function changeGridSize() {
+    // Select button element
+    const button = document.querySelector(".button");
+
+    // Listen for click and prompt new size on click
+    button.addEventListener("click", (e) => {
+        e.stopPropagation();
+        newSize = prompt("Enter new Grid size between 16 and 100");
+        removeGrid();
+        createGrid(newSize);
+    })
+}
+
+
+// remove old grid from the page
+function removeGrid() {
+    const oldGrid = document.querySelectorAll(".grid");
+
+    oldGrid.forEach((div) => {
+        div.remove();
+    });
+}
