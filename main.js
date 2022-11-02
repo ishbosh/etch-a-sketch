@@ -14,3 +14,16 @@
     // Use prompt to request new grid size, set limit between 16 - 100
     // Limit the original div container size so they fit into the same space.
 
+function createGrid(sizeOfGrid) {
+    // Testing - Create one div
+    sizeOfGrid = 1;
+
+    // Number of Rows
+    for (let i = 0; i < sizeOfGrid; i++) {
+        // Number of Columns
+        for (let j = 0; j < sizeOfGrid; j++) {
+            let newDiv = document.createElement("div");
+            newDiv.classList.add("grid");
+        }
+    }
+}
