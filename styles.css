@@ -17,12 +17,13 @@ div.container {
     display: flex;
     flex-wrap: wrap;
     margin-top: auto;
+    border: 80px solid rgba(151, 16, 16, 0.637);
 
 }
 
 .grid {
     border: 1px solid black;
-    font-size: 16px;
+    font-size: 6px;
 }
 
 #footer {
