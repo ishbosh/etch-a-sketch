@@ -5,7 +5,6 @@ html, body {
 
 body {
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
 
@@ -17,13 +16,36 @@ div.container {
     display: flex;
     flex-wrap: wrap;
     margin-top: auto;
-    border: 80px solid rgba(151, 16, 16, 0.637);
+    margin-bottom: 32px;
+    border: 60px solid rgba(151, 16, 16, 0.637);
+
 
 }
 
 .grid {
     border: 1px solid black;
     font-size: 6px;
+}
+
+.button-container {
+    padding: 16px;
+    margin: auto;
+}
+
+.button {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: lightblue;
+    border-radius: 10px;
+}
+
+.button:hover {
+    background-color: rgb(121, 193, 218);
+}
+
+.button:active {
+    background-color: rgb(98, 183, 211);
 }
 
 #footer {
