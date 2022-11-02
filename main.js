@@ -50,6 +50,7 @@ function createGrid(sizeOfGrid) {
         }
     }
 
+    displayGridSize(sizeOfGrid);
     drawOnGrid();
 }
 
@@ -90,7 +91,7 @@ function changeGridSize() {
     // Listen for click and prompt new size on click
     button.addEventListener("click", (e) => {
         e.stopPropagation();
-        newSize = prompt("Enter new Grid size between 16 and 100");
+        let newSize = prompt("ERASE & CREATE NEW GRID\nEnter size between 16 and 100:");
         removeGrid();
         createGrid(newSize);
     })
@@ -104,4 +105,11 @@ function removeGrid() {
     oldGrid.forEach((div) => {
         div.remove();
     });
+}
+
+// Change text display for grid size
+function displayGridSize(size) {
+    // Add text to display current grid size
+    const sizeDisplay = document.querySelector("#size");
+    sizeDisplay.textContent = " " + size;
 }

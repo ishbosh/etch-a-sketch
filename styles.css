@@ -48,6 +48,17 @@ div.container {
     background-color: rgb(98, 183, 211);
 }
 
+.text-container {
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    width: 760px;
+}
+
+#size {
+
+}
+
 #footer {
     display: flex;
     justify-content: center;
