@@ -77,33 +77,37 @@ function drawOnGrid() {
     const grid = document.querySelectorAll(".grid");
 
     grid.forEach((div) => {
-        div.addEventListener("mouseenter", function(e){
-            // get colors from grid div
-            colors = [window.getComputedStyle(e.target).getPropertyValue("background-color")];
-            // Extract the current background color & apply to rgb variables
-            let rgbArray = extractRGBValues(colors);
-            let red = rgbArray[0],
-                green = rgbArray[1],
-                blue = rgbArray[2];
-
-            // if already black, return
-            if (red == 0 && green == 0 && blue == 0) {
-                return;
-            }
-
-            // Change Colors using the rgb variables
-            rgbArray = randomColorToBlack(red, green, blue);
-            // Assign the changed colors to rgb variables
-            red = rgbArray[0],
-            green = rgbArray[1],
-            blue = rgbArray[2];
-
-            // draw color to grid div
-            e.target.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
-        });
+        useRandomColors(div);
     });
 }
 
+
+function useRandomColors(div) {
+    div.addEventListener("mouseenter", function(e){
+        // get colors from grid div
+        colors = [window.getComputedStyle(e.target).getPropertyValue("background-color")];
+        // Extract the current background color & apply to rgb variables
+        let rgbArray = extractRGBValues(colors);
+        let red = rgbArray[0],
+            green = rgbArray[1],
+            blue = rgbArray[2];
+
+        // if already black, return
+        if (red == 0 && green == 0 && blue == 0) {
+            return;
+        }
+
+        // Change Colors using the rgb variables
+        rgbArray = randomColorToBlack(red, green, blue);
+        // Assign the changed colors to rgb variables
+        red = rgbArray[0],
+        green = rgbArray[1],
+        blue = rgbArray[2];
+
+        // draw color to grid div
+        e.target.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+    });
+}
 
 function changeGridSize() {
     // Select button element

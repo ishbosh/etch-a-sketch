@@ -18,12 +18,12 @@ div.container {
     margin-top: auto;
     margin-bottom: 32px;
     border: 40px solid rgba(151, 16, 16, 0.637);
-
-
+    border-radius: 15px;
 }
 
 .grid {
-    border: 1px solid black;
+    border: 0px;
+    border-radius: 50px;
     font-size: 6px;
     background-color: rgb(255, 255, 255);
 }
