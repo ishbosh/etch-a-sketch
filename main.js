@@ -77,10 +77,17 @@ function drawOnGrid() {
     const grid = document.querySelectorAll(".grid");
 
     grid.forEach((div) => {
+        // Random Colors
         useRandomColors(div);
     });
 }
 
+
+function useBlack(div) {
+    div.addEventListener("mouseenter", function(e){
+        e.target.style.backgroundColor = `#000`;
+    })
+}
 
 function useRandomColors(div) {
     div.addEventListener("mouseenter", function(e){
