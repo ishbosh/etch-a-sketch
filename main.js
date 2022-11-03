@@ -27,8 +27,8 @@ displaySliderText();
 
 function createGrid(sizeOfGrid) {
     //Limit size of grid
-    if (sizeOfGrid > 120) {
-        sizeOfGrid = 120;
+    if (sizeOfGrid > 100) {
+        sizeOfGrid = 100;
     } else if (sizeOfGrid < 12) {
         sizeOfGrid = 12;
     }
@@ -98,9 +98,14 @@ function changeGridSizeOnButtonClick() {
     const button = document.querySelector("#resize");
     button.addEventListener("click", (e) => {
         e.stopPropagation();
-        const newSize = prompt("ERASE & CREATE NEW GRID\nEnter size between 16 and 100:");
-        removeGrid();
-        createGrid(newSize);
+        // Get the new size from the slider
+        const slider = document.querySelector("#sizeRange.slider");
+        if (slider.value != gridState.gridSize) {
+            if (confirm(`Erase everything and resize grid to ${slider.value}x${slider.value}?`)) {
+                removeGrid();
+                createGrid(slider.value);
+            }
+        }
     })
 }
 
