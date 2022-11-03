@@ -15,6 +15,8 @@
     // Use prompt to request new grid size, set limit between 16 - 100
     // Limit the original div container size so they fit into the same space.
 
+// INITIALIZATION OF VARIABLES AND FUNCTION CALLS //
+
 // Set the default starting grid size
 const DEFAULT_SIZE = 16;
 const DEFAULT_COLOR = "black";
@@ -36,6 +38,7 @@ clearGridOnButtonClick();
 displaySliderText();
 
 
+// FUNCTIONS: GRID CREATION AND MANIPULATION //
 
 function createGrid(sizeOfGrid) {
     //Limit size of grid
@@ -74,24 +77,14 @@ function createGrid(sizeOfGrid) {
     drawOnGrid();
 }
 
-function calculateGridElementSize(sizeOfGrid) {
-    // Get size of the grid container, assume width and height are the same. Use parseInt to drop the px off
-    const container = document.querySelector(".container");
-    const containerSize = parseInt(getComputedStyle(container).width, 10);
-    // Get size of the grid border - temporarily add it to the DOM and then remove it. use parseInt to drop the px off 
-    const tempDiv = document.createElement("div")
-    tempDiv.classList.add("grid");
-    container.appendChild(tempDiv);
-    const BORDER_SIZE = parseInt(getComputedStyle(tempDiv).borderWidth, 10);
-    container.removeChild(tempDiv);
+function removeGrid() {
+    const oldGrid = document.querySelectorAll(".grid");
 
-    // Need to subtract the 2 sides of the border from the total element size so that it fits properly
-    const elementSize = (containerSize / sizeOfGrid) - (BORDER_SIZE * 2);
-    return elementSize;
+    oldGrid.forEach((div) => {
+        div.remove();
+    });
 }
 
-
-// Create a draw function
 function drawOnGrid() {
     // Listen for mouse enter on each grid square, change color to black on mouse enter (and then stop listening to that square?)
     const grid = document.querySelectorAll(".grid");
@@ -113,18 +106,6 @@ function drawOnGrid() {
     });
 }
 
-
-function changeColorOnButtonClick() {
-    const buttons = document.querySelectorAll(".color-buttons");
-    buttons.forEach((button) => {
-        button.addEventListener("click", (e) => {
-            if (e.target.id !== "clear") {
-                gridState.color = e.target.id;
-            }
-        });
-    });
-}
-
 function clearGridOnButtonClick() {
     const button = document.querySelector("#clear");
 
@@ -134,8 +115,40 @@ function clearGridOnButtonClick() {
     })
 }
 
-// if color is set to random, set the color based on the color of the grid div
-// return the new colors in rgb format and draw them in the draw function
+function changeGridSizeOnButtonClick() {
+    // Select button element
+    const button = document.querySelector("#resize");
+
+    // Listen for click and prompt new size on click
+    button.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const newSize = prompt("ERASE & CREATE NEW GRID\nEnter size between 16 and 100:");
+        removeGrid();
+        createGrid(newSize);
+    })
+}
+
+// HELPER FUNCTIONS: FOR GRID CREATION AND MANIPULATION //
+
+function calculateGridElementSize(sizeOfGrid) {
+    // Get size of the grid container, assume width and height are the same. Use parseInt to drop the px off
+    const container = document.querySelector(".container");
+    const containerSize = parseInt(getComputedStyle(container).width, 10);
+    // Get size of the grid border - temporarily add it to the DOM and then remove it. use parseInt to drop the px off 
+    const tempDiv = document.createElement("div")
+    tempDiv.classList.add("grid");
+    container.appendChild(tempDiv);
+    const BORDER_SIZE = parseInt(getComputedStyle(tempDiv).borderWidth, 10);
+    container.removeChild(tempDiv);
+
+    // Need to subtract the 2 sides of the border from the total element size so that it fits properly
+    const elementSize = (containerSize / sizeOfGrid) - (BORDER_SIZE * 2);
+    return elementSize;
+}
+
+
+// FUNCTIONS: COLORIZATION OF GRID CELLS //
+
 function useRandomColors() {
 
     const red = getRandomIntInclusive(0, 255);
@@ -208,19 +221,16 @@ function useLightener(e) {
         return `rgb(${red}, ${green}, ${blue})`;
 }
 
-function changeGridSizeOnButtonClick() {
-    // Select button element
-    const button = document.querySelector("#resize");
-
-    // Listen for click and prompt new size on click
-    button.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const newSize = prompt("ERASE & CREATE NEW GRID\nEnter size between 16 and 100:");
-        removeGrid();
-        createGrid(newSize);
-    })
+function changeColorOnButtonClick() {
+    const buttons = document.querySelectorAll(".color-buttons");
+    buttons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+            if (e.target.id !== "clear") {
+                gridState.color = e.target.id;
+            }
+        });
+    });
 }
-
 
 function changeShadingOnButtonClick() {
     const button = document.querySelector("#shading-amount");
@@ -244,18 +254,8 @@ function changeLighteningOnButtonClick() {
     })
 }
 
-// remove old grid from the page
-function removeGrid() {
-    const oldGrid = document.querySelectorAll(".grid");
 
-    oldGrid.forEach((div) => {
-        div.remove();
-    });
-}
-
-// Change text display for grid size
-
-
+// HELPER FUNCTIONS: COLORIZATION //
 
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
@@ -275,6 +275,7 @@ function extractRGBValues(rgbString) {
 
     return rgbColors;
 }
+
 
 // FUNCTIONS: DISPLAY TEXT TO PAGE //
 
