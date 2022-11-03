@@ -19,14 +19,17 @@
 const DEFAULT_SIZE = 16;
 const DEFAULT_COLOR = "black";
 const DEFAULT_SHADING = .10;
+const DEFAULT_LIGHTENING = .10;
 // Initialize the starting state of the grid
-const gridState = {color: DEFAULT_COLOR, gridSize: DEFAULT_SIZE, gridLines: false, shading: DEFAULT_SHADING}
+const gridState = {color: DEFAULT_COLOR, gridSize: DEFAULT_SIZE, gridLines: false, shading: DEFAULT_SHADING, lightening: DEFAULT_LIGHTENING}
 // Create the initial grid
 createGrid(gridState.gridSize);
 // Listen for changes to grid size
 changeGridSizeOnButtonClick();
 // Listen for changes to shading amount
 changeShadingOnButtonClick();
+// Listen for changes to lightening amount
+changeLighteningOnButtonClick();
 
 
 
@@ -99,6 +102,8 @@ function drawOnGrid() {
                 e.target.style.backgroundColor = useShader(e);
             } else if (gridState.color == "eraser") {
                 e.target.style.backgroundColor = `rgb(255, 255, 255)`;
+            } else if (gridState.color == "lightener") {
+                e.target.style.backgroundColor = useLightener(e);
             }
         });
     });
@@ -155,6 +160,38 @@ function useShader(e) {
     return `rgb(${red}, ${green}, ${blue})`;
 }
 
+function useLightener(e) {
+        // Shade color lighter than previous value with each pass (default 10%)
+        const lightenAmount = gridState.lightening;
+
+        // get colors from grid div
+        const colors = [window.getComputedStyle(e.target).getPropertyValue("background-color")];
+    
+        // Extract the current background color & apply to rgb variables
+        const rgbArray = extractRGBValues(colors);
+        let currentRed = rgbArray[0],
+            currentGreen = rgbArray[1],
+             currentBlue = rgbArray[2];
+    
+        // if already white, return
+        if (currentRed == 255 && currentGreen == 255 && currentBlue == 255) {
+            return `rgb(255, 255, 255)`;
+        } else if (currentRed == 0 && currentGreen == 0 && currentBlue == 0) {
+            currentRed = 20;
+            currentGreen = 20;
+            currentBlue = 20;
+        }
+        const moreRed = Math.floor(currentRed * lightenAmount);
+        const moreGreen = Math.floor(currentGreen * lightenAmount);
+        const moreBlue = Math.floor(currentBlue * lightenAmount);
+    
+        const red = currentRed + moreRed;
+        const green = currentGreen + moreGreen;
+        const blue = currentBlue + moreBlue;
+    
+        // return the random color (and shading)
+        return `rgb(${red}, ${green}, ${blue})`;
+}
 
 function changeGridSizeOnButtonClick() {
     // Select button element
@@ -178,6 +215,17 @@ function changeShadingOnButtonClick() {
         do {
             gridState.shading = prompt("Enter new shader amount between 0 and 1\nEnter a decimal - Closer to 0 = less shading, closer to 1 = more shading\nMake sure to turn on shader")
         } while (gridState.shading <= 0 || gridState.shading >= 1);
+    })
+}
+
+function changeLighteningOnButtonClick() {
+    const button = document.querySelector("#lightening-amount");
+
+    button.addEventListener("click", (e) => {
+        e.stopPropagation();
+        do {
+            gridState.lightening = prompt("Enter new lightener amount between 0 and 1\nEnter a decimal - Closer to 0 = less lightening, closer to 1 = more lightening\nMake sure to turn on lightener")
+        } while (gridState.lightening <= 0 || gridState.lightening >= 1);
     })
 }
 
