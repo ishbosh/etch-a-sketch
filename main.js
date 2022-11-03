@@ -78,7 +78,28 @@ function drawOnGrid() {
 
     grid.forEach((div) => {
         div.addEventListener("mouseenter", function(e){
-            e.target.style.backgroundColor = "#000";
+            // get colors from grid div
+            colors = [window.getComputedStyle(e.target).getPropertyValue("background-color")];
+            // Extract the current background color & apply to rgb variables
+            let rgbArray = extractRGBValues(colors);
+            let red = rgbArray[0],
+                green = rgbArray[1],
+                blue = rgbArray[2];
+
+            // if already black, return
+            if (red == 0 && green == 0 && blue == 0) {
+                return;
+            }
+
+            // Change Colors using the rgb variables
+            rgbArray = randomColorToBlack(red, green, blue);
+            // Assign the changed colors to rgb variables
+            red = rgbArray[0],
+            green = rgbArray[1],
+            blue = rgbArray[2];
+
+            // draw color to grid div
+            e.target.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
         });
     });
 }
@@ -91,7 +112,7 @@ function changeGridSize() {
     // Listen for click and prompt new size on click
     button.addEventListener("click", (e) => {
         e.stopPropagation();
-        let newSize = prompt("ERASE & CREATE NEW GRID\nEnter size between 16 and 100:");
+        const newSize = prompt("ERASE & CREATE NEW GRID\nEnter size between 16 and 100:");
         removeGrid();
         createGrid(newSize);
     })
@@ -112,4 +133,41 @@ function displayGridSize(size) {
     // Add text to display current grid size
     const sizeDisplay = document.querySelector("#size");
     sizeDisplay.textContent = " " + size;
+}
+
+function randomColorToBlack(currentRed, currentGreen, currentBlue) {
+    const lessRed = Math.floor(currentRed * .25);
+    const lessGreen = Math.floor(currentGreen * .25);
+    const lessBlue = Math.floor(currentBlue * .25);
+
+    if (currentRed == 255 && currentGreen == 255 && currentBlue == 255) {
+        const red = getRandomIntInclusive(0, 255);
+        const green = getRandomIntInclusive(0, 255);
+        const blue = getRandomIntInclusive(0, 255);
+        return [red, green, blue];
+    } else {
+        const red = currentRed - lessRed;
+        const green = currentGreen - lessGreen;
+        const blue = currentBlue - lessBlue;
+        return [red, green, blue];
+    }
+}
+
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function extractRGBValues(rgbString) {
+    rgbString = rgbString.toString();
+
+    rgbString = rgbString.substring(rgbString.indexOf("(") + 1, rgbString.indexOf(")"));
+    rgbColors = rgbString.split(",", 3);
+
+    rgbColors[0] = parseInt(rgbColors[0]);
+    rgbColors[1] = parseInt(rgbColors[1]);
+    rgbColors[2] = parseInt(rgbColors[2]);
+
+    return rgbColors;
 }

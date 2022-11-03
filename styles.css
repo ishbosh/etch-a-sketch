@@ -17,7 +17,7 @@ div.container {
     flex-wrap: wrap;
     margin-top: auto;
     margin-bottom: 32px;
-    border: 60px solid rgba(151, 16, 16, 0.637);
+    border: 40px solid rgba(151, 16, 16, 0.637);
 
 
 }
@@ -25,6 +25,7 @@ div.container {
 .grid {
     border: 1px solid black;
     font-size: 6px;
+    background-color: rgb(255, 255, 255);
 }
 
 .button-container {
@@ -53,10 +54,6 @@ div.container {
     display: flex;
     justify-content: space-between;
     width: 760px;
-}
-
-#size {
-
 }
 
 #footer {
