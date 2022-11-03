@@ -1,24 +1,7 @@
-// Create a 16x16 grid of square divs
-    // Given GRID_SIZE, create GRID_SIZE number of rows of with GRID_SIZE number of div elements in each row.
-    // Assign class of grid to each div element
-    // Calculate height and width of each div grid element by dividing the total container size by number of grid elements
-
-// Insert divs into main div container
-    // insert all div elements with class of grid into div with class of container
-
-// Add a Hover effect to the grid divs to change the color on mouseover, leaving a pixelated trail
-    // Add event listener to each div element with class of grid to listen for mouseover
-    // Change background color of the div mouse has entered when mouse enters each div
-
-// Add a button to the top of the screen that will send a popup asking for the number of squares per side for a new grid. Max 100. Fit to same total space.
-    // Add button to HTML file to create new grid
-    // Use prompt to request new grid size, set limit between 16 - 100
-    // Limit the original div container size so they fit into the same space.
-
 // INITIALIZATION OF VARIABLES AND FUNCTION CALLS //
 
 // Set the default starting grid size
-const DEFAULT_SIZE = 16;
+const DEFAULT_SIZE = 32;
 const DEFAULT_COLOR = "black";
 const DEFAULT_SHADING = .10;
 const DEFAULT_LIGHTENING = .10;
@@ -28,6 +11,8 @@ const gridState = {color: DEFAULT_COLOR, gridSize: DEFAULT_SIZE, gridLines: fals
 createGrid(gridState.gridSize);
 // Listen for changes to grid size
 changeGridSizeOnButtonClick();
+// Listen for changes to color
+changeColorOnButtonClick();
 // Listen for changes to shading amount
 changeShadingOnButtonClick();
 // Listen for changes to lightening amount
@@ -42,16 +27,14 @@ displaySliderText();
 
 function createGrid(sizeOfGrid) {
     //Limit size of grid
-    if (sizeOfGrid > 100) {
-        sizeOfGrid = 100;
-    } else if (sizeOfGrid < 16) {
-        sizeOfGrid = 16;
+    if (sizeOfGrid > 120) {
+        sizeOfGrid = 120;
+    } else if (sizeOfGrid < 12) {
+        sizeOfGrid = 12;
     }
     gridState.gridSize = sizeOfGrid;
-    // Grab the container
+    
     const container = document.querySelector(".container");
-
-    // Calculate size of each grid element
     const gridElementSize = calculateGridElementSize(sizeOfGrid) + "px";
 
     // Number of Rows
@@ -69,26 +52,23 @@ function createGrid(sizeOfGrid) {
             container.appendChild(newDiv);
         }
     }
-    // Display the size of the grid in text - kept in the create function for when new grids are created
+
+    // For every new grid that is created:
+    // Display the size of the grid in text 
     displayGridSize(sizeOfGrid);
-    // Listen for changes to color
-    changeColorOnButtonClick();
     // Listen for drawing on the grid
     drawOnGrid();
 }
 
 function removeGrid() {
     const oldGrid = document.querySelectorAll(".grid");
-
     oldGrid.forEach((div) => {
         div.remove();
     });
 }
 
 function drawOnGrid() {
-    // Listen for mouse enter on each grid square, change color to black on mouse enter (and then stop listening to that square?)
     const grid = document.querySelectorAll(".grid");
-
     grid.forEach((div) => {
         div.addEventListener("mouseenter", function(e){
             if (gridState.color == "black") {
@@ -108,7 +88,6 @@ function drawOnGrid() {
 
 function clearGridOnButtonClick() {
     const button = document.querySelector("#clear");
-
     button.addEventListener("click", () => {
         removeGrid();
         createGrid(gridState.gridSize);
@@ -116,10 +95,7 @@ function clearGridOnButtonClick() {
 }
 
 function changeGridSizeOnButtonClick() {
-    // Select button element
     const button = document.querySelector("#resize");
-
-    // Listen for click and prompt new size on click
     button.addEventListener("click", (e) => {
         e.stopPropagation();
         const newSize = prompt("ERASE & CREATE NEW GRID\nEnter size between 16 and 100:");
