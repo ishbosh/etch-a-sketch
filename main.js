@@ -32,6 +32,8 @@ changeShadingOnButtonClick();
 changeLighteningOnButtonClick();
 // Listen for clear grid button
 clearGridOnButtonClick();
+// Display current value of range sliders
+displaySliderText();
 
 
 
@@ -252,11 +254,6 @@ function removeGrid() {
 }
 
 // Change text display for grid size
-function displayGridSize(size) {
-    // Add text to display current grid size
-    const sizeDisplay = document.querySelector("#size");
-    sizeDisplay.textContent = " " + size;
-}
 
 
 
@@ -278,3 +275,41 @@ function extractRGBValues(rgbString) {
 
     return rgbColors;
 }
+
+// FUNCTIONS: DISPLAY TEXT TO PAGE //
+
+function displayGridSize(size) {
+    // Add text to display current grid size
+    const sizeDisplay = document.querySelector("#size");
+    sizeDisplay.textContent = " " + size + "x" + size;
+}
+
+
+function displaySliderText() {
+    const shaderText = document.getElementById("shaderText");
+    const lightenerText = document.getElementById("lightenerText");
+    const sizeText = document.getElementById("sizeText");
+
+    const sliders = document.querySelectorAll(".slider");
+    sliders.forEach((slider) => {
+        if (slider.id == "shaderRange") {
+            shaderText.textContent = slider.value + '%';
+            slider.oninput = function() {
+                shaderText.textContent = this.value + '%';
+            }
+        }
+        if (slider.id == "lightenerRange") {
+            lightenerText.textContent = slider.value + '%';
+            slider.oninput = function() {
+                lightenerText.textContent = this.value + '%';
+            }
+        }
+        if (slider.id == "sizeRange") {
+            sizeText.textContent = slider.value + 'x' + slider.value;
+            slider.oninput = function() {
+                sizeText.textContent = this.value + 'x' + this.value;
+            }
+        }
+    })
+}
+

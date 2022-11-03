@@ -57,6 +57,8 @@ div.container {
     width: 760px;
 }
 
+
+
 #footer {
     display: flex;
     justify-content: center;
@@ -65,4 +67,52 @@ div.container {
     background-color: lightgray;
     width: 100%;
     margin-top: auto;
+}
+
+/* Sliders */
+
+#shaderText,
+#lightenerText,
+#sizeText {
+    font-weight: bold;
+}
+
+.warning-text {
+    font-size: 12px;
+}
+
+.slidercontainer {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 15px;
+    background: #949494;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #0468aa;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #0468aa;
+    cursor: pointer;
 }
