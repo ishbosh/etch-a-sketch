@@ -17,12 +17,16 @@
 
 // Set the default starting grid size
 const DEFAULT_SIZE = 16;
+const DEFAULT_COLOR = "black";
+const DEFAULT_SHADING = .10;
 // Initialize the starting state of the grid
-const gridState = {color: "black", gridSize: DEFAULT_SIZE, gridLines: false}
+const gridState = {color: DEFAULT_COLOR, gridSize: DEFAULT_SIZE, gridLines: false, shading: DEFAULT_SHADING}
 // Create the initial grid
 createGrid(gridState.gridSize);
 // Listen for changes to grid size
 changeGridSizeOnButtonClick();
+// Listen for changes to shading amount
+changeShadingOnButtonClick();
 
 
 
@@ -91,8 +95,10 @@ function drawOnGrid() {
                 e.target.style.backgroundColor = `rgb(0, 0, 0)`;
             } else if (gridState.color == "color") {
                 e.target.style.backgroundColor = useRandomColors();
-            } else if (gridState.color = "shader") {
+            } else if (gridState.color == "shader") {
                 e.target.style.backgroundColor = useShader(e);
+            } else if (gridState.color == "eraser") {
+                e.target.style.backgroundColor = `rgb(255, 255, 255)`;
             }
         });
     });
@@ -121,8 +127,8 @@ function useRandomColors() {
 }
 
 function useShader(e) {
-    // Shade color 10% darker than previous value with each pass
-    const shadeAmount = .10;
+    // Shade color darker than previous value with each pass (default 10%)
+    const shadeAmount = gridState.shading;
 
     // get colors from grid div
     const colors = [window.getComputedStyle(e.target).getPropertyValue("background-color")];
@@ -152,7 +158,7 @@ function useShader(e) {
 
 function changeGridSizeOnButtonClick() {
     // Select button element
-    const button = document.querySelector(".button");
+    const button = document.querySelector("#resize");
 
     // Listen for click and prompt new size on click
     button.addEventListener("click", (e) => {
@@ -163,6 +169,17 @@ function changeGridSizeOnButtonClick() {
     })
 }
 
+
+function changeShadingOnButtonClick() {
+    const button = document.querySelector("#shading-amount");
+
+    button.addEventListener("click", (e) => {
+        e.stopPropagation();
+        do {
+            gridState.shading = prompt("Enter new shader amount between 0 and 1\nEnter a decimal - Closer to 0 = less shading, closer to 1 = more shading\nMake sure to turn on shader")
+        } while (gridState.shading <= 0 || gridState.shading >= 1);
+    })
+}
 
 // remove old grid from the page
 function removeGrid() {
