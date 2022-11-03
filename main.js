@@ -90,17 +90,14 @@ function drawOnGrid() {
             if (gridState.color == "black") {
                 e.target.style.backgroundColor = `rgb(0, 0, 0)`;
             } else if (gridState.color == "color") {
-                e.target.style.backgroundColor = useRandomColors(e);
+                e.target.style.backgroundColor = useRandomColors();
+            } else if (gridState.color = "shader") {
+                e.target.style.backgroundColor = useShader(e);
             }
         });
     });
 }
 
-// gridState object with color and gridsize properties and gridlines
-
-// listen for button clicks on color buttons, if clicked, change gridState color
-// feed gridState color into a function to convert it to rgb values
-// return the rgb value to a variable to be used to set the color in the event listener for mouseover
 
 function changeColorOnButtonClick() {
     const buttons = document.querySelectorAll(".color-buttons");
@@ -113,30 +110,45 @@ function changeColorOnButtonClick() {
 
 // if color is set to random, set the color based on the color of the grid div
 // return the new colors in rgb format and draw them in the draw function
-function useRandomColors(e) {
-    // get colors from grid div
-    colors = [window.getComputedStyle(e.target).getPropertyValue("background-color")];
-    // Extract the current background color & apply to rgb variables
-    let rgbArray = extractRGBValues(colors);
-    let red = rgbArray[0],
-        green = rgbArray[1],
-        blue = rgbArray[2];
+function useRandomColors() {
 
-    // if already black, return
-    if (red == 0 && green == 0 && blue == 0) {
-        return `rgb(0, 0, 0)`;
-    }
-
-    // Change Colors using the rgb variables
-    rgbArray = darkenColors(red, green, blue);
-    // Assign the changed colors to rgb variables
-    red = rgbArray[0],
-    green = rgbArray[1],
-    blue = rgbArray[2];
+    const red = getRandomIntInclusive(0, 255);
+    const green = getRandomIntInclusive(0, 255);
+    const blue = getRandomIntInclusive(0, 255);
 
     // return the random color (and shading)
     return `rgb(${red}, ${green}, ${blue})`;
 }
+
+function useShader(e) {
+    // Shade color 10% darker than previous value with each pass
+    const shadeAmount = .10;
+
+    // get colors from grid div
+    const colors = [window.getComputedStyle(e.target).getPropertyValue("background-color")];
+
+    // Extract the current background color & apply to rgb variables
+    const rgbArray = extractRGBValues(colors);
+    const currentRed = rgbArray[0],
+        currentGreen = rgbArray[1],
+         currentBlue = rgbArray[2];
+
+    // if already black, return
+    if (currentRed == 0 && currentGreen == 0 && currentBlue == 0) {
+        return `rgb(0, 0, 0)`;
+    }
+    const lessRed = Math.floor(currentRed * shadeAmount);
+    const lessGreen = Math.floor(currentGreen * shadeAmount);
+    const lessBlue = Math.floor(currentBlue * shadeAmount);
+
+    const red = currentRed - lessRed;
+    const green = currentGreen - lessGreen;
+    const blue = currentBlue - lessBlue;
+
+    // return the random color (and shading)
+    return `rgb(${red}, ${green}, ${blue})`;
+}
+
 
 function changeGridSizeOnButtonClick() {
     // Select button element
@@ -168,23 +180,7 @@ function displayGridSize(size) {
     sizeDisplay.textContent = " " + size;
 }
 
-function darkenColors(currentRed, currentGreen, currentBlue) {
-    const lessRed = Math.floor(currentRed * .25);
-    const lessGreen = Math.floor(currentGreen * .25);
-    const lessBlue = Math.floor(currentBlue * .25);
 
-    if (currentRed == 255 && currentGreen == 255 && currentBlue == 255) {
-        const red = getRandomIntInclusive(0, 255);
-        const green = getRandomIntInclusive(0, 255);
-        const blue = getRandomIntInclusive(0, 255);
-        return [red, green, blue];
-    } else {
-        const red = currentRed - lessRed;
-        const green = currentGreen - lessGreen;
-        const blue = currentBlue - lessBlue;
-        return [red, green, blue];
-    }
-}
 
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
