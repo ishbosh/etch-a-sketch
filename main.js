@@ -30,6 +30,8 @@ changeGridSizeOnButtonClick();
 changeShadingOnButtonClick();
 // Listen for changes to lightening amount
 changeLighteningOnButtonClick();
+// Listen for clear grid button
+clearGridOnButtonClick();
 
 
 
@@ -114,9 +116,20 @@ function changeColorOnButtonClick() {
     const buttons = document.querySelectorAll(".color-buttons");
     buttons.forEach((button) => {
         button.addEventListener("click", (e) => {
-            gridState.color = e.target.id;
+            if (e.target.id !== "clear") {
+                gridState.color = e.target.id;
+            }
         });
     });
+}
+
+function clearGridOnButtonClick() {
+    const button = document.querySelector("#clear");
+
+    button.addEventListener("click", () => {
+        removeGrid();
+        createGrid(gridState.gridSize);
+    })
 }
 
 // if color is set to random, set the color based on the color of the grid div
