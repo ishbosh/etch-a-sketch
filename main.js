@@ -15,10 +15,16 @@
     // Use prompt to request new grid size, set limit between 16 - 100
     // Limit the original div container size so they fit into the same space.
 
+// Set the default starting grid size
 const DEFAULT_SIZE = 16;
+// Initialize the starting state of the grid
+const gridState = {color: "black", gridSize: DEFAULT_SIZE, gridLines: false}
+// Create the initial grid
+createGrid(gridState.gridSize);
+// Listen for changes to grid size
+changeGridSizeOnButtonClick();
 
-createGrid(DEFAULT_SIZE);
-changeGridSize();
+
 
 function createGrid(sizeOfGrid) {
     //Limit size of grid
@@ -27,7 +33,7 @@ function createGrid(sizeOfGrid) {
     } else if (sizeOfGrid < 16) {
         sizeOfGrid = 16;
     }
-
+    gridState.gridSize = sizeOfGrid;
     // Grab the container
     const container = document.querySelector(".container");
 
@@ -49,8 +55,11 @@ function createGrid(sizeOfGrid) {
             container.appendChild(newDiv);
         }
     }
-
+    // Display the size of the grid in text - kept in the create function for when new grids are created
     displayGridSize(sizeOfGrid);
+    // Listen for changes to color
+    changeColorOnButtonClick();
+    // Listen for drawing on the grid
     drawOnGrid();
 }
 
@@ -77,46 +86,59 @@ function drawOnGrid() {
     const grid = document.querySelectorAll(".grid");
 
     grid.forEach((div) => {
-        // Random Colors
-        useRandomColors(div);
+        div.addEventListener("mouseenter", function(e){
+            if (gridState.color == "black") {
+                e.target.style.backgroundColor = `rgb(0, 0, 0)`;
+            } else if (gridState.color == "color") {
+                e.target.style.backgroundColor = useRandomColors(e);
+            }
+        });
     });
 }
 
+// gridState object with color and gridsize properties and gridlines
 
-function useBlack(div) {
-    div.addEventListener("mouseenter", function(e){
-        e.target.style.backgroundColor = `#000`;
-    })
+// listen for button clicks on color buttons, if clicked, change gridState color
+// feed gridState color into a function to convert it to rgb values
+// return the rgb value to a variable to be used to set the color in the event listener for mouseover
+
+function changeColorOnButtonClick() {
+    const buttons = document.querySelectorAll(".color-buttons");
+    buttons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+            gridState.color = e.target.id;
+        });
+    });
 }
 
-function useRandomColors(div) {
-    div.addEventListener("mouseenter", function(e){
-        // get colors from grid div
-        colors = [window.getComputedStyle(e.target).getPropertyValue("background-color")];
-        // Extract the current background color & apply to rgb variables
-        let rgbArray = extractRGBValues(colors);
-        let red = rgbArray[0],
-            green = rgbArray[1],
-            blue = rgbArray[2];
-
-        // if already black, return
-        if (red == 0 && green == 0 && blue == 0) {
-            return;
-        }
-
-        // Change Colors using the rgb variables
-        rgbArray = randomColorToBlack(red, green, blue);
-        // Assign the changed colors to rgb variables
-        red = rgbArray[0],
+// if color is set to random, set the color based on the color of the grid div
+// return the new colors in rgb format and draw them in the draw function
+function useRandomColors(e) {
+    // get colors from grid div
+    colors = [window.getComputedStyle(e.target).getPropertyValue("background-color")];
+    // Extract the current background color & apply to rgb variables
+    let rgbArray = extractRGBValues(colors);
+    let red = rgbArray[0],
         green = rgbArray[1],
         blue = rgbArray[2];
 
-        // draw color to grid div
-        e.target.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
-    });
+    // if already black, return
+    if (red == 0 && green == 0 && blue == 0) {
+        return `rgb(0, 0, 0)`;
+    }
+
+    // Change Colors using the rgb variables
+    rgbArray = darkenColors(red, green, blue);
+    // Assign the changed colors to rgb variables
+    red = rgbArray[0],
+    green = rgbArray[1],
+    blue = rgbArray[2];
+
+    // return the random color (and shading)
+    return `rgb(${red}, ${green}, ${blue})`;
 }
 
-function changeGridSize() {
+function changeGridSizeOnButtonClick() {
     // Select button element
     const button = document.querySelector(".button");
 
@@ -146,7 +168,7 @@ function displayGridSize(size) {
     sizeDisplay.textContent = " " + size;
 }
 
-function randomColorToBlack(currentRed, currentGreen, currentBlue) {
+function darkenColors(currentRed, currentGreen, currentBlue) {
     const lessRed = Math.floor(currentRed * .25);
     const lessGreen = Math.floor(currentGreen * .25);
     const lessBlue = Math.floor(currentBlue * .25);
