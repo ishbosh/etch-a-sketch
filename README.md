@@ -1,4 +1,4 @@
-# etch-a-sketch
+# Pixel Sketch (AKA Etch-A-Sketch)
 Odin Etch-A-Sketch Project with HTML, CSS, and JavaScript.
 
 The goal of this project is to create an Etch-A-Sketch from scratch in
