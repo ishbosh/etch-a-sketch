@@ -1,4 +1,4 @@
-// INITIALIZATION OF VARIABLES AND FUNCTION CALLS //
+//#region INITIALIZATION OF VARIABLES AND FUNCTION CALLS //
 // TODO: refactor to create global variables for query selectors that are used in multiple functions //
 
 // Set the default starting grid size
@@ -25,32 +25,24 @@ const gridState = {
 // Create the initial grid
 createGrid(gridState.gridSize);
 
-// Listen for changes to grid size
-changeGridSizeOnButtonClick();
-// Listen for changes to color
-changeColorOnButtonClick();
-// Listen for changes to shading amount
-changeShadingOnButtonClick();
-// Listen for changes to lightening amount
-changeLighteningOnButtonClick();
-// Listen for clear grid button
-clearGridOnButtonClick();
+// Apply changes to grid size when adjusted
+changeGridSizeHandler();
+// Apply changes to color on button click
+changeColorHandler();
+// Apply changes to shading amount when adjusted
+changeShadingHandler();
+// Apply changes to lightening amount when adjusted
+changeLighteningHandler();
+// Apply clear grid on button click
+clearGridHandler();
+// Listen for the draw on click button to be toggled on/off and apply toggle
+drawOnClickListener();
 
 // Display current value of range sliders
 displaySliderText();
+//#endregion //
 
-// Allow drawing on the grid by default
-drawOnGrid();
-
-// functions under construction //
-
-
-
-// end functions under construction //
-
-
-
-// FUNCTIONS: GRID CREATION AND MANIPULATION //
+//#region // GRID CREATION AND MANIPULATION //
 
 function createGrid(sizeOfGrid) {
     //Limit size of grid
@@ -81,51 +73,17 @@ function createGrid(sizeOfGrid) {
     }
     // Select the new grid
     gridState.grid = document.querySelectorAll(".grid");
-    // For every new grid that is created:
-    // Display the size of the grid in text 
+     
+    // Display the size of the grid in text for every new grid that is created
     displayGridSize(sizeOfGrid);
+    // Allow drawing on the grid by default & call it again when new grids are created
+    drawOnGrid();
 }
 
 function removeGrid() {
     gridState.grid.forEach((div) => {
         div.remove();
     });
-}
-
-function toggleDrawOnClick() {
-    if (gridState.drawOnClick == false) {
-        // Turn on draw on click and disable drawing and allow toggling of drawing on/off
-        gridState.drawOnClick = true;
-        gridState.drawOnGrid = "disabled";
-        drawOnGrid();
-        toggleDrawOnGrid();
-    } else {
-        // Turn off draw on click and allow drawing
-        gridState.drawOnClick = false;
-        gridState.drawOnGrid = "enabled";
-        drawOnGrid();
-        toggleDrawOnGrid();
-    }
-}
-
-function toggleDrawOnGrid() {
-    // Listen for clicks on the grid container, enable drawing when clicked
-    if (gridState.drawOnClick == true) {
-        CONTAINER.addEventListener("click", drawOnClickHandler);
-    } else {
-        CONTAINER.removeEventListener("click", drawOnClickHandler);
-    }
-}
-
-function drawOnClickHandler(e) {
-    e.stopPropagation;
-    if (gridState.drawOnGrid == "disabled") {
-        gridState.drawOnGrid = "enabled";
-        drawOnGrid();
-    } else {
-        gridState.drawOnGrid = "disabled";
-        drawOnGrid();
-    }
 }
 
 function drawOnGrid() {
@@ -140,32 +98,11 @@ function drawOnGrid() {
         })
     }
 }
+//#endregion //
 
-function clearGridOnButtonClick() {
-    const button = document.querySelector("#clear");
-    button.addEventListener("click", () => {
-        removeGrid();
-        createGrid(gridState.gridSize);
-    })
-}
+//#region // HELPER FUNCTIONS: FOR GRID CREATION AND MANIPULATION //
 
-function changeGridSizeOnButtonClick() {
-    const button = document.querySelector("#resize");
-    button.addEventListener("click", (e) => {
-        e.stopPropagation();
-        // Get the new size from the slider
-        const slider = document.querySelector("#sizeRange.slider");
-        if (slider.value != gridState.gridSize) {
-            if (confirm(`Erase everything and resize grid to ${slider.value}x${slider.value}?`)) {
-                removeGrid();
-                createGrid(slider.value);
-            }
-        }
-    })
-}
-
-// HELPER FUNCTIONS: FOR GRID CREATION AND MANIPULATION //
-
+    // Calculations //
 function calculateGridElementSize(sizeOfGrid) {
     // Get size of the grid container, assume width and height are the same. Use parseInt to drop the px off
     ;
@@ -182,6 +119,7 @@ function calculateGridElementSize(sizeOfGrid) {
     return elementSize;
 }
 
+    // Draw On Click //
 function drawOnGridHandler(e){
     if (gridState.color == "black") {
         e.currentTarget.style.backgroundColor = `rgb(0, 0, 0)`;
@@ -196,9 +134,76 @@ function drawOnGridHandler(e){
     }
 }
 
+function drawOnClickHandler(e) {
+    e.stopPropagation;
+    if (gridState.drawOnGrid == "disabled") {
+        gridState.drawOnGrid = "enabled";
+        drawOnGrid();
+    } else {
+        gridState.drawOnGrid = "disabled";
+        drawOnGrid();
+    }
+}
 
-// FUNCTIONS: COLORIZATION OF GRID CELLS //
+function clearGridHandler() {
+    const button = document.querySelector("#clear");
+    button.addEventListener("click", () => {
+        removeGrid();
+        createGrid(gridState.gridSize);
+    })
+}
 
+function changeGridSizeHandler() {
+    const button = document.querySelector("#resize");
+    button.addEventListener("click", (e) => {
+        e.stopPropagation();
+        // Get the new size from the slider
+        const slider = document.querySelector("#sizeRange.slider");
+        if (slider.value != gridState.gridSize) {
+            if (confirm(`Erase everything and resize grid to ${slider.value}x${slider.value}?`)) {
+                removeGrid();
+                createGrid(slider.value);
+            }
+        }
+    })
+}
+
+function drawOnClickListener() {
+    const toggler = document.querySelector('input[type="checkbox"]');
+    toggler.addEventListener('change', toggleDrawOnClick);
+}
+
+function toggleDrawOnClick() {
+    if (gridState.drawOnClick == false) {
+        // Turn on draw on click and disable drawing and allow toggling of drawing on/off
+        gridState.drawOnClick = true;
+        gridState.drawOnGrid = "disabled";
+        drawOnGrid();
+        toggleDrawOnGrid();
+    } 
+    else {
+        // Turn off draw on click and allow drawing
+        gridState.drawOnClick = false;
+        gridState.drawOnGrid = "enabled";
+        drawOnGrid();
+        toggleDrawOnGrid();
+    }
+}
+
+function toggleDrawOnGrid() {
+    // Listen for clicks on the grid container, enable drawing when clicked
+    if (gridState.drawOnClick == true) {
+        CONTAINER.addEventListener("click", drawOnClickHandler);
+    } 
+    else {
+        CONTAINER.removeEventListener("click", drawOnClickHandler);
+    }
+}
+//#endregion //
+
+//#region // FUNCTIONS: COLORIZATION OF GRID CELLS //
+
+    // COLOR OPTIONS //
 function useRandomColors() {
 
     const red = getRandomIntInclusive(0, 255);
@@ -271,7 +276,8 @@ function useLightener(e) {
         return `rgb(${red}, ${green}, ${blue})`;
 }
 
-function changeColorOnButtonClick() {
+    // COLOR HANDLERS //
+function changeColorHandler() {
     const buttons = document.querySelectorAll(".color-buttons");
     buttons.forEach((button) => {
         button.addEventListener("click", (e) => {
@@ -282,7 +288,7 @@ function changeColorOnButtonClick() {
     });
 }
 
-function changeShadingOnButtonClick() {
+function changeShadingHandler() {
     const button = document.querySelector("#shading-amount");
 
     button.addEventListener("click", (e) => {
@@ -293,7 +299,7 @@ function changeShadingOnButtonClick() {
     })
 }
 
-function changeLighteningOnButtonClick() {
+function changeLighteningHandler() {
     const button = document.querySelector("#lightening-amount");
 
     button.addEventListener("click", (e) => {
@@ -303,16 +309,17 @@ function changeLighteningOnButtonClick() {
         } while (gridState.lightening <= 0 || gridState.lightening >= 1);
     })
 }
+//#endregion //
 
+//#region HELPER FUNCTIONS: FOR COLORIZATION OF GRID CELLS //
 
-// HELPER FUNCTIONS: COLORIZATION //
-
+    // Generates random ints for use with the random colors //
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
+    // Converts RGB style string to array of ints //
 function extractRGBValues(rgbString) {
     rgbString = rgbString.toString();
 
@@ -325,16 +332,15 @@ function extractRGBValues(rgbString) {
 
     return rgbColors;
 }
+//#endregion //
 
-
-// FUNCTIONS: DISPLAY TEXT TO PAGE //
+//#region // FUNCTIONS: DISPLAY TEXT TO PAGE //
 
 function displayGridSize(size) {
     // Add text to display current grid size
     const sizeDisplay = document.querySelector("#size");
     sizeDisplay.textContent = " " + size + "x" + size;
 }
-
 
 function displaySliderText() {
     const shaderText = document.getElementById("shaderText");
@@ -363,4 +369,4 @@ function displaySliderText() {
         }
     })
 }
-
+//#endregion //

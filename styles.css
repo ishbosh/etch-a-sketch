@@ -116,3 +116,63 @@ div.container {
     background: #0468aa;
     cursor: pointer;
 }
+
+/* Toggle Switch */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 72px;
+    height: 32px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #949494;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "OFF";
+    text-align: center;
+    font-size: 10px;
+    color: white;
+    height: 24px;
+    width: 24px;
+    left: 4px;
+    bottom: 4px;
+    background-color: #0468aa;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .toggle-slider {
+    background-color: #e9e9e9;
+}
+
+input:focus + .toggle-slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .toggle-slider:before {
+    -webkit-transform: translateX(40px);
+    -ms-transform: translateX(40px);
+    transform: translateX(40px);
+    content: "ON";
+    text-align: center;
+    font-size: 10px;
+    color: white;
+}
