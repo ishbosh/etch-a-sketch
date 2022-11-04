@@ -12,8 +12,8 @@ body {
 }
 
 div.container {
-    width: 760px;
-    height: 760px;
+    width: 720px;
+    height: 720px;
     display: flex;
     flex-wrap: wrap;
     margin-top: auto;
@@ -48,17 +48,13 @@ div.container {
     background-color: rgb(255, 255, 255);
 }
 
-#grid-size {
-    margin-top: 15px;
-}
-
 /* Containers */
 
 .main-container {
     display: flex;
     justify-content: center;
-    gap: 50px;
-    margin-top: 15px;
+    gap: 100px;
+    margin: 15px 0px 0px -50px;
 }
 
 .options-container {
@@ -81,7 +77,8 @@ div.container {
     font-size: 14px;
     display: flex;
     justify-content: space-between;
-    width: 840px;
+    width: 780px;
+    margin-left: 10px;
 }
 
 /* Buttons */
@@ -89,9 +86,10 @@ div.container {
 .color-buttons {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
     border-top: 1px solid black;
-    padding-top: 15px;
+    padding-top: 12px;
+    margin-top: 5px;
 }
 
 .color-buttons button {
@@ -146,6 +144,7 @@ div.container {
 .warning-text {
     font-size: 12px;
     text-align: center;
+    margin-bottom: 15px;
 }
 
 .slider {
@@ -195,7 +194,7 @@ div.container {
     flex-shrink: 0;
     opacity: 0.8;
     align-self: center;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 .switch:hover {

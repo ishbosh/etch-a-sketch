@@ -2,13 +2,15 @@
 
 // Set the default starting grid size
 const DEFAULT_SIZE = 32;
-const DEFAULT_COLOR = "black";
+const DEFAULT_COLOR = "color";
 const DEFAULT_SHADING = .10;
 const DEFAULT_LIGHTENING = .10;
 
 // Element Selection
 const CONTAINER = document.querySelector(".container");
 const SLIDERS = document.querySelectorAll(".slider");
+const COLOR_PICKER = document.querySelector("#colorpicker");
+
 
 // Initialize the starting state of the grid
 const gridState = {
@@ -40,6 +42,7 @@ drawOnClickListener();
 
 // Display current value of range sliders
 displaySliderText();
+
 //#endregion //
 
 //#region // GRID CREATION AND MANIPULATION //
@@ -121,9 +124,9 @@ function calculateGridElementSize(sizeOfGrid) {
 
     // Draw On Click //
 function drawOnGridHandler(e){
-    if (gridState.color == "black") {
-        e.currentTarget.style.backgroundColor = `rgb(0, 0, 0)`;
-    } else if (gridState.color == "color") {
+    if (gridState.color == "color") {
+        e.currentTarget.style.backgroundColor = useColorPicker();
+    } else if (gridState.color == "random") {
         e.target.style.backgroundColor = useRandomColors();
     } else if (gridState.color == "shader") {
         e.target.style.backgroundColor = useShader(e);
@@ -206,6 +209,18 @@ function toggleDrawOnGrid() {
 //#region // FUNCTIONS: COLORIZATION OF GRID CELLS //
 
     // COLOR OPTIONS //
+function useColorPicker() {
+    const colorHexValue = COLOR_PICKER.getAttribute("value");
+    // update the value attribute with new values when changed
+    COLOR_PICKER.onchange = function() {
+        COLOR_PICKER.setAttribute("value", this.value);
+    }
+    // Convert from HEX to rgb (because other functions manipulate RGB vals not HEX)
+    let rgbObject = hexToRGB(colorHexValue);
+
+    return `rgb(${rgbObject.r}, ${rgbObject.g}, ${rgbObject.b})`
+}
+
 function useRandomColors() {
 
     const red = getRandomIntInclusive(0, 255);
@@ -270,9 +285,9 @@ function useLightener(e) {
         const moreGreen = Math.floor(currentGreen * lightenAmount);
         const moreBlue = Math.floor(currentBlue * lightenAmount);
     
-        const red = currentRed + moreRed;
-        const green = currentGreen + moreGreen;
-        const blue = currentBlue + moreBlue;
+        const red = currentRed + Math.max(moreRed, 5);
+        const green = currentGreen + Math.max(moreGreen, 5);
+        const blue = currentBlue + Math.max(moreBlue, 5);
     
         // return the random color (and shading)
         return `rgb(${red}, ${green}, ${blue})`;
@@ -281,11 +296,14 @@ function useLightener(e) {
     // COLOR HANDLERS //
 function changeColorHandler() {
     const buttons = document.querySelectorAll(".color-buttons");
-    document.getElementById("black").focus();
+    document.getElementById("color").focus();
     buttons.forEach((button) => {
         button.addEventListener("click", (e) => {
-            if (e.target.id !== "clear") {
+            if (e.target.id !== "clear" && e.target.id !== "colorpicker") {
                 gridState.color = e.target.id;
+            }
+            if (e.target.id == "color") {
+                useColorPicker();
             }
         });
     });
@@ -339,6 +357,17 @@ function extractRGBValues(rgbString) {
 
     return rgbColors;
 }
+
+    // Converts HEX to RGB //
+function hexToRGB(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
 //#endregion //
 
 //#region // FUNCTIONS: DISPLAY TEXT TO PAGE //
