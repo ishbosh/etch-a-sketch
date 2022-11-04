@@ -9,39 +9,41 @@
     <script src="main.js" defer></script>
 </head>
 <body>
-<div class="button-container">
-    <div class="color-buttons">
-        <button id="black">Color: Black</button>
-        <button id="color">Color: Random</button>
-        <button id="shader">Shader</button>
-        <button id="shading-amount">Change Shading Amount</button>
-        <button id="lightener">Lightener</button>
-        <button id="lightening-amount">Change Lightening Amount</button>
-        <button id="eraser">Eraser</button>
-        <button id="clear">Clear Grid</button>
+    <div id="header">Etch-A-Sketch Pro</div>
+    <div class="main-container">
+        <div class="options-container">
+            <div class="slider">
+                <input type="range" min="5" max="30" value="10" class="slider" id="shaderRange">
+                <div class="slider-text">Shader Strength:  <span id="shaderText"></span></div>
+                <input type="range" min="5" max="30" value="10" class="slider" id="lightenerRange">
+                <div class="slider-text">Lighten Strength:  <span id="lightenerText"></span></div>
+                <div id="grid-size">Grid Size: <span id="sizeText"></span></div>
+                <input type="range" min="12" max="100" value="32" class="slider" id="sizeRange">
+                <button id="resize">Resize</button>
+                <div class="warning-text">Warning: Resizing will erase everything!</div>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="toggle-slider"></span>
+                </label>
+                <div id="switch-text">Draw-On-Click</div>
+            </div>
+            <div class="color-buttons">
+                <button class="btn" id="black">Color: Black</button>
+                <button class="btn" id="color">Color: Random</button>
+                <button class="btn" id="shader">Shader</button>
+                <button class="btn" id="lightener">Lightener</button>
+                <button class="btn" id="eraser">Eraser</button>
+                <button class="btn" id="clear">Clear All</button>
+            </div>
+        </div>
+        <div class="game-container">
+            <div class="text-container">
+                <div class="text">Tip: Move slower on larger grids to avoid gaps.</div>
+                <div class="text">Current Grid Size:<span id="size"></span></div>
+            </div>
+            <div class="container">
+        </div>    
     </div>
-</div>
-<div class="slidecontainer">
-    <input type="range" min="5" max="30" value="10" class="slider" id="shaderRange">
-    <div>Shading Strength:  <span id="shaderText"></span></div>
-    <input type="range" min="5" max="30" value="10" class="slider" id="lightenerRange">
-    <div>Lighten Strength:  <span id="lightenerText"></span>
-    </div>
-    <input type="range" min="12" max="100" value="32" class="slider" id="sizeRange">
-    <div>Grid Size: <span id="sizeText"></span><button id="resize">Resize</button>
-        <div class="warning-text">Warning: Resizing will erase everything!</div>
-    </div>
-    <label class="switch">
-        <input type="checkbox">
-        <span class="toggle-slider"></span>
-    </label>
-</div>
-<div class="text-container">
-    <div class="text">Tip: Move slower on larger grids to avoid gaps.</div>
-    <div class="text">Current Grid Size:<span id="size"></span></div>
-</div>
-<div class="container">
-
 </div>
     
 <div id="footer">

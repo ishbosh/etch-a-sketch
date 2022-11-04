@@ -1,5 +1,4 @@
 //#region INITIALIZATION OF VARIABLES AND FUNCTION CALLS //
-// TODO: refactor to create global variables for query selectors that are used in multiple functions //
 
 // Set the default starting grid size
 const DEFAULT_SIZE = 32;
@@ -9,6 +8,7 @@ const DEFAULT_LIGHTENING = .10;
 
 // Element Selection
 const CONTAINER = document.querySelector(".container");
+const SLIDERS = document.querySelectorAll(".slider");
 
 // Initialize the starting state of the grid
 const gridState = {
@@ -148,8 +148,10 @@ function drawOnClickHandler(e) {
 function clearGridHandler() {
     const button = document.querySelector("#clear");
     button.addEventListener("click", () => {
-        removeGrid();
-        createGrid(gridState.gridSize);
+        if (confirm(`Erase everything?`)){
+            removeGrid();
+            createGrid(gridState.gridSize);
+        }
     })
 }
 
@@ -279,6 +281,7 @@ function useLightener(e) {
     // COLOR HANDLERS //
 function changeColorHandler() {
     const buttons = document.querySelectorAll(".color-buttons");
+    document.getElementById("black").focus();
     buttons.forEach((button) => {
         button.addEventListener("click", (e) => {
             if (e.target.id !== "clear") {
@@ -289,24 +292,28 @@ function changeColorHandler() {
 }
 
 function changeShadingHandler() {
-    const button = document.querySelector("#shading-amount");
-
-    button.addEventListener("click", (e) => {
-        e.stopPropagation();
-        do {
-            gridState.shading = prompt("Enter new shader amount between 0 and 1\nEnter a decimal - Closer to 0 = less shading, closer to 1 = more shading\nMake sure to turn on shader")
-        } while (gridState.shading <= 0 || gridState.shading >= 1);
+    const shaderSlider = document.querySelector("#shaderRange");
+    // Divide by 100 to convert to a decimal to change by %
+    gridState.shading = parseInt(shaderSlider.value) / 100;
+    SLIDERS.forEach((slider) => {
+        if (slider.id == "shaderRange") {
+            slider.onchange = function() {
+                gridState.shading = parseInt(this.value) / 100;
+            }
+        }
     })
 }
 
 function changeLighteningHandler() {
-    const button = document.querySelector("#lightening-amount");
+    const lightenerSlider = document.querySelector("#lightenerRange");
 
-    button.addEventListener("click", (e) => {
-        e.stopPropagation();
-        do {
-            gridState.lightening = prompt("Enter new lightener amount between 0 and 1\nEnter a decimal - Closer to 0 = less lightening, closer to 1 = more lightening\nMake sure to turn on lightener")
-        } while (gridState.lightening <= 0 || gridState.lightening >= 1);
+    gridState.lightening = parseInt(lightenerSlider.value) / 100;
+    SLIDERS.forEach((slider) => {
+        if (slider.id == "lightenerRange") {
+            slider.onchange = function() {
+                gridState.lightening = parseInt(this.value) / 100;
+            }
+        }
     })
 }
 //#endregion //
@@ -347,8 +354,7 @@ function displaySliderText() {
     const lightenerText = document.getElementById("lightenerText");
     const sizeText = document.getElementById("sizeText");
 
-    const sliders = document.querySelectorAll(".slider");
-    sliders.forEach((slider) => {
+    SLIDERS.forEach((slider) => {
         if (slider.id == "shaderRange") {
             shaderText.textContent = slider.value + '%';
             slider.oninput = function() {

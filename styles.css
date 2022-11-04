@@ -23,41 +23,14 @@ div.container {
     box-shadow: 0 10px 15px rgb(53, 63, 58);
 }
 
-.grid {
-    border: 0px;
-    font-size: 6px;
-    background-color: rgb(255, 255, 255);
-}
-
-.button-container {
-    padding: 16px;
-    margin: auto;
-}
-
-.button {
-    padding: 12px;
-    font-size: 16px;
+#header {
+    margin-left: 228px;
+    margin-top: 10px;
+    font-size: 50px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-weight: bold;
-    background-color: lightblue;
-    border-radius: 10px;
+    text-shadow: 2px 2px rgb(53, 63, 58);
 }
-
-.button:hover {
-    background-color: rgb(121, 193, 218);
-}
-
-.button:active {
-    background-color: rgb(98, 183, 211);
-}
-
-.text-container {
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-    width: 760px;
-}
-
-
 
 #footer {
     display: flex;
@@ -69,6 +42,95 @@ div.container {
     margin-top: auto;
 }
 
+.grid {
+    border: 0px;
+    font-size: 6px;
+    background-color: rgb(255, 255, 255);
+}
+
+#grid-size {
+    margin-top: 15px;
+}
+
+/* Containers */
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 15px;
+}
+
+.options-container {
+    padding: 16px;
+    margin: auto;
+    border: 3px solid black;
+    border-radius: 10px;
+    height: 620px;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 10px 15px rgb(53, 63, 58);
+    background-color: rgb(102, 13, 13);
+    color: white;
+}
+
+
+.text-container {
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    width: 840px;
+}
+
+/* Buttons */
+
+.color-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-top: 1px solid black;
+    padding-top: 15px;
+}
+
+.color-buttons button {
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: lightblue;
+    border-radius: 10px;
+}
+
+.color-buttons button:hover {
+    background-color: rgb(121, 193, 218);
+}
+
+.color-buttons button:active {
+    background-color: rgb(98, 183, 211);
+}
+
+.color-buttons button:focus {
+    background-color: rgb(73, 170, 202);
+}
+
+#clear:hover {
+    background-color: rgb(245, 102, 59);
+}
+
+#clear:active {
+    background-color: rgb(187, 66, 29);
+}
+
+#resize {
+    margin-top: 5px;
+    border-radius: 10px;
+}
+
+#resize:hover {
+    background-color: lightgray;
+}
+
 /* Sliders */
 
 #shaderText,
@@ -77,24 +139,28 @@ div.container {
     font-weight: bold;
 }
 
-.warning-text {
-    font-size: 12px;
+.slider-text {
+    margin-bottom: 12px;
 }
 
-.slidercontainer {
-    width: 100%;
+.warning-text {
+    font-size: 12px;
+    text-align: center;
 }
 
 .slider {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 15px;
-    background: #949494;
     outline: none;
-    opacity: 0.7;
     -webkit-transition: .2s;
     transition: opacity .2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.slider input {
+    opacity: 0.6;
 }
 
 .slider:hover {
@@ -108,6 +174,7 @@ div.container {
     height: 20px;
     background: #0468aa;
     cursor: pointer;
+    flex: 0;
 }
 
 .slider::-moz-range-thumb {
@@ -115,6 +182,7 @@ div.container {
     height: 20px;
     background: #0468aa;
     cursor: pointer;
+    flex: 0;
 }
 
 /* Toggle Switch */
@@ -124,12 +192,25 @@ div.container {
     display: inline-block;
     width: 72px;
     height: 32px;
+    flex-shrink: 0;
+    opacity: 0.8;
+    align-self: center;
+    margin-top: 20px;
+}
+
+.switch:hover {
+    opacity: 1;
 }
 
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
+}
+
+#switch-text {
+    font-size: 16px;
+    text-align: center;
 }
 
 .toggle-slider {
