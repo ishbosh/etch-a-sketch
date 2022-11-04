@@ -1,14 +1,30 @@
 // INITIALIZATION OF VARIABLES AND FUNCTION CALLS //
+// TODO: refactor to create global variables for query selectors that are used in multiple functions //
 
 // Set the default starting grid size
 const DEFAULT_SIZE = 32;
 const DEFAULT_COLOR = "black";
 const DEFAULT_SHADING = .10;
 const DEFAULT_LIGHTENING = .10;
+
+// Element Selection
+const CONTAINER = document.querySelector(".container");
+
 // Initialize the starting state of the grid
-const gridState = {color: DEFAULT_COLOR, gridSize: DEFAULT_SIZE, gridLines: false, shading: DEFAULT_SHADING, lightening: DEFAULT_LIGHTENING}
+const gridState = {
+    grid: null,
+    color: DEFAULT_COLOR, 
+    gridSize: DEFAULT_SIZE, 
+    gridLines: false, 
+    shading: DEFAULT_SHADING, 
+    lightening: DEFAULT_LIGHTENING,
+    drawOnClick: false,
+    drawOnGrid: "enabled"
+}
+
 // Create the initial grid
 createGrid(gridState.gridSize);
+
 // Listen for changes to grid size
 changeGridSizeOnButtonClick();
 // Listen for changes to color
@@ -19,8 +35,19 @@ changeShadingOnButtonClick();
 changeLighteningOnButtonClick();
 // Listen for clear grid button
 clearGridOnButtonClick();
+
 // Display current value of range sliders
 displaySliderText();
+
+// Allow drawing on the grid by default
+drawOnGrid();
+
+// functions under construction //
+
+
+
+// end functions under construction //
+
 
 
 // FUNCTIONS: GRID CREATION AND MANIPULATION //
@@ -34,7 +61,7 @@ function createGrid(sizeOfGrid) {
     }
     gridState.gridSize = sizeOfGrid;
     
-    const container = document.querySelector(".container");
+    ;
     const gridElementSize = calculateGridElementSize(sizeOfGrid) + "px";
 
     // Number of Rows
@@ -49,41 +76,69 @@ function createGrid(sizeOfGrid) {
             newDiv.style.height = gridElementSize;
 
             // Add the new Div to the grid container
-            container.appendChild(newDiv);
+            CONTAINER.appendChild(newDiv);
         }
     }
-
+    // Select the new grid
+    gridState.grid = document.querySelectorAll(".grid");
     // For every new grid that is created:
     // Display the size of the grid in text 
     displayGridSize(sizeOfGrid);
-    // Listen for drawing on the grid
-    drawOnGrid();
 }
 
 function removeGrid() {
-    const oldGrid = document.querySelectorAll(".grid");
-    oldGrid.forEach((div) => {
+    gridState.grid.forEach((div) => {
         div.remove();
     });
 }
 
+function toggleDrawOnClick() {
+    if (gridState.drawOnClick == false) {
+        // Turn on draw on click and disable drawing and allow toggling of drawing on/off
+        gridState.drawOnClick = true;
+        gridState.drawOnGrid = "disabled";
+        drawOnGrid();
+        toggleDrawOnGrid();
+    } else {
+        // Turn off draw on click and allow drawing
+        gridState.drawOnClick = false;
+        gridState.drawOnGrid = "enabled";
+        drawOnGrid();
+        toggleDrawOnGrid();
+    }
+}
+
+function toggleDrawOnGrid() {
+    // Listen for clicks on the grid container, enable drawing when clicked
+    if (gridState.drawOnClick == true) {
+        CONTAINER.addEventListener("click", drawOnClickHandler);
+    } else {
+        CONTAINER.removeEventListener("click", drawOnClickHandler);
+    }
+}
+
+function drawOnClickHandler(e) {
+    e.stopPropagation;
+    if (gridState.drawOnGrid == "disabled") {
+        gridState.drawOnGrid = "enabled";
+        drawOnGrid();
+    } else {
+        gridState.drawOnGrid = "disabled";
+        drawOnGrid();
+    }
+}
+
 function drawOnGrid() {
-    const grid = document.querySelectorAll(".grid");
-    grid.forEach((div) => {
-        div.addEventListener("mouseenter", function(e){
-            if (gridState.color == "black") {
-                e.target.style.backgroundColor = `rgb(0, 0, 0)`;
-            } else if (gridState.color == "color") {
-                e.target.style.backgroundColor = useRandomColors();
-            } else if (gridState.color == "shader") {
-                e.target.style.backgroundColor = useShader(e);
-            } else if (gridState.color == "eraser") {
-                e.target.style.backgroundColor = `rgb(255, 255, 255)`;
-            } else if (gridState.color == "lightener") {
-                e.target.style.backgroundColor = useLightener(e);
-            }
+    // Only draw while drawing is allowed/enabled
+    if (gridState.drawOnGrid == "enabled") {
+        gridState.grid.forEach((div) => {
+            div.addEventListener("mouseenter", drawOnGridHandler);
         });
-    });
+    } else if (gridState.drawOnGrid == "disabled") {
+        gridState.grid.forEach((div) => {
+            div.removeEventListener("mouseenter", drawOnGridHandler);
+        })
+    }
 }
 
 function clearGridOnButtonClick() {
@@ -113,18 +168,32 @@ function changeGridSizeOnButtonClick() {
 
 function calculateGridElementSize(sizeOfGrid) {
     // Get size of the grid container, assume width and height are the same. Use parseInt to drop the px off
-    const container = document.querySelector(".container");
-    const containerSize = parseInt(getComputedStyle(container).width, 10);
+    ;
+    const containerSize = parseInt(getComputedStyle(CONTAINER).width, 10);
     // Get size of the grid border - temporarily add it to the DOM and then remove it. use parseInt to drop the px off 
     const tempDiv = document.createElement("div")
     tempDiv.classList.add("grid");
-    container.appendChild(tempDiv);
+    CONTAINER.appendChild(tempDiv);
     const BORDER_SIZE = parseInt(getComputedStyle(tempDiv).borderWidth, 10);
-    container.removeChild(tempDiv);
+    CONTAINER.removeChild(tempDiv);
 
     // Need to subtract the 2 sides of the border from the total element size so that it fits properly
     const elementSize = (containerSize / sizeOfGrid) - (BORDER_SIZE * 2);
     return elementSize;
+}
+
+function drawOnGridHandler(e){
+    if (gridState.color == "black") {
+        e.currentTarget.style.backgroundColor = `rgb(0, 0, 0)`;
+    } else if (gridState.color == "color") {
+        e.target.style.backgroundColor = useRandomColors();
+    } else if (gridState.color == "shader") {
+        e.target.style.backgroundColor = useShader(e);
+    } else if (gridState.color == "eraser") {
+        e.target.style.backgroundColor = `rgb(255, 255, 255)`;
+    } else if (gridState.color == "lightener") {
+        e.target.style.backgroundColor = useLightener(e);
+    }
 }
 
 
@@ -186,9 +255,9 @@ function useLightener(e) {
         if (currentRed == 255 && currentGreen == 255 && currentBlue == 255) {
             return `rgb(255, 255, 255)`;
         } else if (currentRed == 0 && currentGreen == 0 && currentBlue == 0) {
-            currentRed = 20;
-            currentGreen = 20;
-            currentBlue = 20;
+            currentRed = 25;
+            currentGreen = 25;
+            currentBlue = 25;
         }
         const moreRed = Math.floor(currentRed * lightenAmount);
         const moreGreen = Math.floor(currentGreen * lightenAmount);
