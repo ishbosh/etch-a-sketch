@@ -43,6 +43,9 @@ drawOnClickListener();
 // Display current value of range sliders
 displaySliderText();
 
+// Call initial usecolorpicker to enable the input listener (without this, first input change was not being read)
+useColorPicker();
+
 //#endregion //
 
 //#region // GRID CREATION AND MANIPULATION //
@@ -210,11 +213,11 @@ function toggleDrawOnGrid() {
 
     // COLOR OPTIONS //
 function useColorPicker() {
-    const colorHexValue = COLOR_PICKER.getAttribute("value");
     // update the value attribute with new values when changed
-    COLOR_PICKER.onchange = function() {
+    COLOR_PICKER.oninput = function() {
         COLOR_PICKER.setAttribute("value", this.value);
     }
+    const colorHexValue = COLOR_PICKER.getAttribute("value");
     // Convert from HEX to rgb (because other functions manipulate RGB vals not HEX)
     let rgbObject = hexToRGB(colorHexValue);
 
